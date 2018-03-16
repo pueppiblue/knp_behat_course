@@ -1,0 +1,10 @@
+/vendor
+/app/app.db
+/app/cache
+/.idea
+
+/.web-server-pid
+/app/config/parameters.yml
+/phpunit.xml
+/web/bundles/
+
