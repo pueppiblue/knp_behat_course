@@ -1,11 +1,17 @@
 default:
-  extensions:
-    Behat\MinkExtension:
-      base_url: http://behat
-      browser_name: chrome
-      javascript_session: selenium2
-      sessions:
-        selenium2:
-          selenium2: ~
-        web:
-          goutte: ~
+    extensions:
+        Behat\MinkExtension:
+            base_url: http://behat
+            browser_name: chrome
+            javascript_session: selenium2
+            sessions:
+                selenium2:
+                    selenium2: ~
+                web:
+                    goutte: ~
+
+    suites:
+        default:
+            contexts:
+                - FeatureContext
+                - Behat\MinkExtension\Context\MinkContext
