@@ -5,6 +5,7 @@ use Behat\Behat\Context\Context;
 use Behat\Mink\Element\DocumentElement;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 
 require_once __DIR__.'/../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -32,8 +33,8 @@ class FeatureContext extends RawMinkContext implements Context
     public function clearDataBase()
     {
         $em = $this->getContainer()->get('doctrine')->getManager();
-        $em->createQuery('DELETE FROM AppBundle:Product')->execute();
-        $em->createQuery('DELETE FROM AppBundle:User')->execute();
+        $purger = new ORMPurger($em);
+        $purger->purge();
     }
 
     /**
