@@ -1,6 +1,7 @@
 <?php
 
 use Behat\Behat\Context\Context;
+use Behat\Mink\Element\DocumentElement;
 use Behat\MinkExtension\Context\RawMinkContext;
 
 require_once __DIR__.'/../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
@@ -26,8 +27,7 @@ class FeatureContext extends RawMinkContext implements Context
      */
     public function iFillInTheSearchBoxWith($term)
     {
-        $searchBox = $this->getSession()
-            ->getPage()
+        $searchBox = $this->getPage()
             ->find('css', '[name=searchTerm]');
 
         assertNotNull($searchBox, 'Search box not found.');
@@ -40,8 +40,7 @@ class FeatureContext extends RawMinkContext implements Context
      */
     public function iPressTheSearchButton()
     {
-        $searchButton = $this->getSession()
-            ->getPage()
+        $searchButton = $this->getPage()
             ->find('css', '#search_submit');
 
         assertNotNull($searchButton, 'Search button not found.');
@@ -49,4 +48,12 @@ class FeatureContext extends RawMinkContext implements Context
         $searchButton->press();
     }
 
+    /**
+     * Shortcut:
+     * Returns a page from the session object
+     */
+    private function getPage(): DocumentElement
+    {
+        return $this->getSession()->getPage();
+    }
 }
