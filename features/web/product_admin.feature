@@ -17,7 +17,8 @@ Feature: Product Admin Area
     Then I should not see "Anonymous"
 
   Scenario: Add a new product
-    Given I am on "/admin/products"
+    Given I am logged in as an admin
+    And I am on "/admin/products"
     When I click "New Product"
     And I fill in "Name" with "Veloci-chew toy"
     And I fill in "Price" with "100"
