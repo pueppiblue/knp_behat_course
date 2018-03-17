@@ -4,6 +4,7 @@ use AppBundle\Entity\User;
 use Behat\Behat\Context\Context;
 use Behat\Mink\Element\DocumentElement;
 use Behat\MinkExtension\Context\RawMinkContext;
+use Doctrine\ORM\EntityManagerInterface;
 
 require_once __DIR__.'/../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -40,6 +41,17 @@ class FeatureContext extends RawMinkContext implements Context
     }
 
     /**
+     * @BeforeScenario
+     */
+    public function clearDataBase()
+    {
+        /** @var EntityManagerInterface $em */
+        $em = self::$container->get('doctrine')->getManager();
+        $em->createQuery('DELETE FROM AppBundle:Product')->execute();
+        $em->createQuery('DELETE FROM AppBundle:User')->execute();
+    }
+
+    /**
      * @Given there is an admin user with username :username and password :password
      */
     public function thereIsAnAdminUserWithUsernameAndPassword($username, $password)
@@ -49,6 +61,7 @@ class FeatureContext extends RawMinkContext implements Context
         $user->setPlainPassword($password);
         $user->setRoles(['ROLE_ADMIN']);
 
+        /** @var EntityManagerInterface $em */
         $em = self::$container->get('doctrine')->getManager();
         $em->persist($user);
         $em->flush();
