@@ -1,11 +1,13 @@
 <?php
 
+use AppBundle\Entity\Product;
 use AppBundle\Entity\User;
 use Behat\Behat\Context\Context;
 use Behat\Mink\Element\DocumentElement;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\ORM\EntityManagerInterface;
 
 require_once __DIR__.'/../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -32,7 +34,7 @@ class FeatureContext extends RawMinkContext implements Context
      */
     public function clearDataBase()
     {
-        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em = $this->getEntityManager();
         $purger = new ORMPurger($em);
         $purger->purge();
     }
@@ -47,7 +49,7 @@ class FeatureContext extends RawMinkContext implements Context
         $user->setPlainPassword($password);
         $user->setRoles(['ROLE_ADMIN']);
 
-        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em = $this->getEntityManager();
         $em->persist($user);
         $em->flush();
     }
@@ -79,6 +81,62 @@ class FeatureContext extends RawMinkContext implements Context
     }
 
     /**
+     * @Given there are :count products
+     */
+    public function thereAreProducts(int $count)
+    {
+        $em = $this->getEntityManager();
+        for ($i = 0; $i < $count; $i++) {
+            $product = new Product();
+            $product->setName('Testproduct'.$i);
+            $product->setPrice(random_int(1, 100) + $i);
+            $product->setDescription('Test description '.$i);
+            $em->persist($product);
+        }
+
+        $em->flush();
+    }
+
+    /**
+     * @When I click :linkText
+     */
+    public function iClick($linkText)
+    {
+        $this->getPage()->clickLink($linkText);
+        //$this->getPage()->findLink($linkText)->click();
+    }
+
+    /**
+     * @Then I should see :count products
+     */
+    public function iShouldSeeProducts(int $count)
+    {
+        $table = $this->getPage()->find('css', 'table.table');
+        assertNotNull($table, 'Table could not be found.');
+        $rows = $table->findAll('css', 'tbody tr');
+        assertNotNull($rows, 'Table had no columns');
+
+        assertCount($count, $rows, 'Table did not have correct number of rows');
+    }
+
+    /**
+     * @Given /^I am logged in as an admin$/
+     */
+    public function iAmLoggedInAsAnAdmin()
+    {
+        $this->thereIsAnAdminUserWithUsernameAndPassword('admin', 'admin');
+        $this->visitPath('/login');
+        $this->getPage()->fillField('Username', 'admin');
+        $this->getPage()->fillField('Password', 'admin');
+        $this->getPage()->pressButton('Login');
+    }
+
+    private function getEntityManager(): EntityManagerInterface
+    {
+        return $this->getContainer()->get('doctrine.orm.entity_manager');
+    }
+    
+    /**
      * Shortcut:
      * Returns a page from the session object
      */
@@ -86,4 +144,5 @@ class FeatureContext extends RawMinkContext implements Context
     {
         return $this->getSession()->getPage();
     }
+
 }
