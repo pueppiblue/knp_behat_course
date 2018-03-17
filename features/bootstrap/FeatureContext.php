@@ -1,5 +1,6 @@
 <?php
 
+use AppBundle\Entity\User;
 use Behat\Behat\Context\Context;
 use Behat\Mink\Element\DocumentElement;
 use Behat\MinkExtension\Context\RawMinkContext;
@@ -36,7 +37,21 @@ class FeatureContext extends RawMinkContext implements Context
         $kernel->boot();
 
         self::$container = $kernel->getContainer();
+    }
 
+    /**
+     * @Given there is an admin user with username :username and password :password
+     */
+    public function thereIsAnAdminUserWithUsernameAndPassword($username, $password)
+    {
+        $user = new User();
+        $user->setUsername($username);
+        $user->setPlainPassword($password);
+        $user->setRoles(['ROLE_ADMIN']);
+
+        $em = self::$container->get('doctrine')->getManager();
+        $em->persist($user);
+        $em->flush();
     }
 
     /**
