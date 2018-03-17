@@ -11,7 +11,7 @@ Feature: Product Admin Area
     Then I should see 5 products
 
   Scenario: Products show author
-    Given there are 0 products
+    Given I am logged in as an admin
     And I author 5 products
     When I am on "/admin/products"
     Then I should not see "Anonymous"

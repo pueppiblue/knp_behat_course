@@ -18,6 +18,9 @@ class FeatureContext extends RawMinkContext implements Context
 {
     use KernelDictionary;
 
+    /** @var User */
+    private $currentUser;
+
     /**
      * Initializes context.
      *
@@ -52,6 +55,8 @@ class FeatureContext extends RawMinkContext implements Context
         $em = $this->getEntityManager();
         $em->persist($user);
         $em->flush();
+
+        $this->currentUser = $user;
     }
 
     /**
@@ -85,16 +90,7 @@ class FeatureContext extends RawMinkContext implements Context
      */
     public function thereAreProducts(int $count)
     {
-        $em = $this->getEntityManager();
-        for ($i = 0; $i < $count; $i++) {
-            $product = new Product();
-            $product->setName('Testproduct'.$i);
-            $product->setPrice(random_int(1, 100) + $i);
-            $product->setDescription('Test description '.$i);
-            $em->persist($product);
-        }
-
-        $em->flush();
+        $this->createProducts($count);
     }
 
     /**
@@ -134,9 +130,9 @@ class FeatureContext extends RawMinkContext implements Context
     /**
      * @Given /^I author (\d+) products$/
      */
-    public function iAuthorProducts($arg1)
+    public function iAuthorProducts($count)
     {
-        throw new \Behat\Behat\Tester\Exception\PendingException();
+        $this->createProducts($count, $this->currentUser);
     }
 
     private function getEntityManager(): EntityManagerInterface
@@ -151,6 +147,25 @@ class FeatureContext extends RawMinkContext implements Context
     private function getPage(): DocumentElement
     {
         return $this->getSession()->getPage();
+    }
+
+    private function createProducts(int $count, User $author = null): void
+    {
+        $em = $this->getEntityManager();
+        for ($i = 0; $i < $count; $i++) {
+            $product = new Product();
+            $product->setName('Testproduct'.$i);
+            $product->setPrice(random_int(1, 100) + $i);
+            $product->setDescription('Test description '.$i);
+
+            if ($author) {
+                $product->setAuthor($author);
+            }
+
+            $em->persist($product);
+        }
+
+        $em->flush();
     }
 
 }
