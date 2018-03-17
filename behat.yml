@@ -1,5 +1,11 @@
 default:
   extensions:
     Behat\MinkExtension:
-      base_url: 'http://behat.dev'
-      goutte: ~
+      base_url: http://behat
+      browser_name: chrome
+      javascript_session: selenium2
+      sessions:
+        selenium2:
+          selenium2: ~
+        web:
+          goutte: ~
