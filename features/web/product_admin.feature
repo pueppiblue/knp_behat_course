@@ -10,6 +10,12 @@ Feature: Product Admin Area
     When I click "Products"
     Then I should see 5 products
 
+  Scenario: Products show author
+    Given there are 0 products
+    And I author 5 products
+    When I am on "/admin/products"
+    Then I should not see "Anonymous"
+
   Scenario: Add a new product
     Given I am on "/admin/products"
     When I click "New Product"

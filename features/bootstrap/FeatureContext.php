@@ -131,11 +131,19 @@ class FeatureContext extends RawMinkContext implements Context
         $this->getPage()->pressButton('Login');
     }
 
+    /**
+     * @Given /^I author (\d+) products$/
+     */
+    public function iAuthorProducts($arg1)
+    {
+        throw new \Behat\Behat\Tester\Exception\PendingException();
+    }
+
     private function getEntityManager(): EntityManagerInterface
     {
         return $this->getContainer()->get('doctrine.orm.entity_manager');
     }
-    
+
     /**
      * Shortcut:
      * Returns a page from the session object
