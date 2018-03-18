@@ -24,6 +24,7 @@ framework:
     profiler:
         enabled: %kernel.debug%
     session: ~
+    form: ~
 
 doctrine:
     dbal:
