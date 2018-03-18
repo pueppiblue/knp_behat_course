@@ -14,12 +14,8 @@ class ProductAdminController extends Controller
     /**
      * @Route("/admin/products", name="product_list")
      */
-    public function listAction(string $flashMessage = null)
+    public function listAction()
     {
-        if ($flashMessage) {
-            $this->addFlash('info', $flashMessage);
-        }
-
         $products = $this->getDoctrine()
             ->getRepository('AppBundle:Product')
             ->findAll();
@@ -49,11 +45,13 @@ class ProductAdminController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $product = $form->getData();
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($product);
-            $em->flush();
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($product);
+//            $em->flush();
 
-            $this->redirectToRoute('product_list', ['flash' => 'Product created FTW!']);
+            $this->addFlash('success', 'Product created FTW!');
+
+            $this->redirectToRoute('product_list');
         }
 
         return $this->render(
