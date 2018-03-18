@@ -45,13 +45,13 @@ class ProductAdminController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $product = $form->getData();
 
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($product);
-//            $em->flush();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($product);
+            $em->flush();
 
             $this->addFlash('success', 'Product created FTW!');
 
-            $this->redirectToRoute('product_list');
+            return $this->redirectToRoute('product_list');
         }
 
         return $this->render(
