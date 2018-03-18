@@ -44,6 +44,7 @@ class ProductAdminController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $product = $form->getData();
+            $product->setAuthor($this->getUser());
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);

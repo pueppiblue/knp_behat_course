@@ -27,3 +27,4 @@ Feature: Product Admin Area
     Then I should see "Product created FTW!"
     And I should be on "/admin/products"
     And I should see "Veloci-chew toy"
+    And I should not see "Anonymous"
