@@ -21,6 +21,7 @@ Feature: Product Admin Area
     Given I am logged in as an admin
     And I am on "/admin/products"
     When I click "New Product"
+    And I wait for the modal to load
     And I fill in "Name" with "Veloci-chew toy"
     And I fill in "Price" with "100"
     And I fill in "Description" with "Have your raptor chew on this instead!"

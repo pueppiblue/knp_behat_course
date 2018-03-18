@@ -135,6 +135,22 @@ class FeatureContext extends RawMinkContext implements Context
         $this->createProducts($count, $this->currentUser);
     }
 
+    /**
+     * @Given /^I wait for the modal to load$/
+     * @throws \InvalidArgumentException
+     */
+    public function iWaitForTheModalToLoad()
+    {
+        $page = $this->getPage();
+
+        $page->waitFor(
+            1,
+            function () use ($page) {
+                return $page->find('named', ['field', 'Name']);
+            }
+        );
+    }
+
     private function getEntityManager(): EntityManagerInterface
     {
         return $this->getContainer()->get('doctrine.orm.entity_manager');
