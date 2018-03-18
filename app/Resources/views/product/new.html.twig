@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
 
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
 {% block body %}
 
     {{ form_start(form) }}
@@ -9,7 +11,7 @@
     {{ form_row(form.price) }}
     {{ form_row(form.description) }}
     <input type="submit" value="Save"
-           class="btn btn-default pull-right"/>
+           class="btn btn-default pull-left"/>
 
     {{ form_end(form) }}
 
