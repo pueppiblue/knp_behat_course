@@ -45,7 +45,7 @@ class FeatureContext extends RawMinkContext implements Context
     /**
      * @Given there is an admin user with username :username and password :password
      */
-    public function thereIsAnAdminUserWithUsernameAndPassword($username, $password)
+    public function thereIsAnAdminUserWithUsernameAndPassword($username, $password): User
     {
         $user = new User();
         $user->setUsername($username);
@@ -56,7 +56,7 @@ class FeatureContext extends RawMinkContext implements Context
         $em->persist($user);
         $em->flush();
 
-        $this->currentUser = $user;
+        return $user;
     }
 
     /**
@@ -120,7 +120,7 @@ class FeatureContext extends RawMinkContext implements Context
      */
     public function iAmLoggedInAsAnAdmin()
     {
-        $this->thereIsAnAdminUserWithUsernameAndPassword('admin', 'admin');
+        $this->currentUser = $this->thereIsAnAdminUserWithUsernameAndPassword('admin', 'admin');
         $this->visitPath('/login');
         $this->getPage()->fillField('Username', 'admin');
         $this->getPage()->fillField('Password', 'admin');
