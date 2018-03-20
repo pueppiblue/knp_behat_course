@@ -36,28 +36,38 @@ class ProductAdminController extends Controller
      */
     public function newAction(Request $request): Response
     {
+
         $product = new Product();
 
-        $form = $this->createForm(new ProductType(), $product);
+        $form = $this->createForm(
+            new ProductType(),
+            $product,
+            ['action' => $this->generateUrl('product_new')]
+        );
 
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $product = $form->getData();
-            $product->setAuthor($this->getUser());
+        if ($request->isMethod('POST')) {
+            $form->submit($request->request->get($form->getName()));
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($product);
-            $em->flush();
 
-            $this->addFlash('success', 'Product created FTW!');
+            if ($form->isSubmitted() && $form->isValid()) {
+                $product = $form->getData();
+                $product->setAuthor($this->getUser());
 
-            return $this->redirectToRoute('product_list');
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($product);
+                $em->flush();
+
+                $this->addFlash('success', 'Product created FTW!');
+
+                return $this->redirectToRoute('product_list');
+            }
         }
 
         return $this->render(
             'product/new.html.twig',
             ['form' => $form->createView()]
         );
+
     }
 }

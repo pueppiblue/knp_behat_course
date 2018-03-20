@@ -2,13 +2,13 @@
 {% form_theme form 'bootstrap_3_layout.html.twig' %}
 
     {{ form_start(form) }}
-    {{ form_errors(form) }}
+        {{ form_errors(form) }}
 
-    {{ form_row(form.name) }}
-    {{ form_row(form.price) }}
-    {{ form_row(form.description) }}
-    <input type="submit" value="Save"
-           class="btn btn-default pull-left"/>
+        {{ form_row(form.name) }}
+        {{ form_row(form.price) }}
+        {{ form_row(form.description) }}
+<input type="submit" value="Save"
+       class="btn btn-default pull-left"/>
 
     {{ form_end(form) }}
 
