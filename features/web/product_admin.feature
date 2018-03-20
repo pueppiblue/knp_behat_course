@@ -8,9 +8,10 @@ Feature: Product Admin Area
 
   Scenario: List available products
     Given there are 5 products
+    And there is 1 products
     And I am on "/admin"
     When I click "Products"
-    Then I should see 5 products
+    Then I should see 6 products
 
   Scenario: Products show author
     Given I author 5 products
