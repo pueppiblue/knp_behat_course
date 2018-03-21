@@ -70,4 +70,21 @@ class ProductAdminController extends Controller
         );
 
     }
+
+    /**
+     * @Route("/admin/products/delete{id}", name="product_delete")
+     */
+    public function deleteAction(Product $product, Request $request)
+    {
+        if ($request->isMethod('DELETE')) {
+
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($product);
+            $em->flush();
+
+            $this->addFlash('success', 'The product was deleted');
+
+            return $this->redirectToRoute('product_list');
+        }
+    }
 }
