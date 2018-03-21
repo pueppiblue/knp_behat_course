@@ -19,12 +19,12 @@ Feature: Product Admin Area
     Then I should not see "Anonymous"
 
   Scenario:
-    Given the following products exits:
+    Given the following products exists:
       | name | is published |
       | Foo1 | yes          |
       | Bar1 | no           |
     When I go to "/admin/products"
-   # *todo*
+    And the "Foo1" row should have a check mark
 
   @javascript
   Scenario: Add a new product

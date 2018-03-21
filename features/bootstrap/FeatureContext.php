@@ -177,7 +177,7 @@ class FeatureContext extends RawMinkContext implements Context
     }
 
     /**
-     * @Given /^the following products exits:$/
+     * @Given /^the following products exists:$/
      */
     public function theFollowingProductsExits(TableNode $table)
     {
@@ -194,6 +194,22 @@ class FeatureContext extends RawMinkContext implements Context
         }
 
         $em->flush();
+    }
+
+    /**
+     * @Given the ":rowText" row should have a check mark
+     */
+    public function theRowShouldHaveACheckMark($rowText)
+    {
+        $td = $this->getPage()->find('xpath', sprintf('//table/tbody/tr/td[.="%s"]', $rowText));
+        assertNotNull($td, sprintf('Could not find table cell containing %s', $rowText));
+
+        $tr = $td->getParent();
+        assertContains(
+            'fa-check',
+            $tr->getHtml(),
+            sprintf('Row with %s did not have a check mark', $rowText)
+        );
     }
 
     private function getEntityManager(): EntityManagerInterface
