@@ -5,6 +5,7 @@ use AppBundle\Entity\User;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\DocumentElement;
+use Behat\Mink\Element\NodeElement;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
@@ -188,8 +189,9 @@ class FeatureContext extends RawMinkContext implements Context
             $product->setName($row['name'] ?? '');
             $product->setDescription($row['description'] ?? '');
             $product->setPrice($row['price'] ?? random_int(10, 1000));
-            $product->setIsPublished($row['is published'] === 'yes');
-
+            if (isset($row['is published'])) {
+                $product->setIsPublished($row['is published'] === 'yes');
+            }
             $em->persist($product);
         }
 
@@ -201,15 +203,27 @@ class FeatureContext extends RawMinkContext implements Context
      */
     public function theRowShouldHaveACheckMark($rowText)
     {
-        $td = $this->getPage()->find('xpath', sprintf('//table/tbody/tr/td[.="%s"]', $rowText));
-        assertNotNull($td, sprintf('Could not find table cell containing %s', $rowText));
+        $tr = $this->findTableRowByRowText($rowText);
 
-        $tr = $td->getParent();
         assertContains(
             'fa-check',
             $tr->getHtml(),
             sprintf('Row with %s did not have a check mark', $rowText)
         );
+    }
+
+    /**
+     * @When i click :linkText in the :rowText row
+     */
+    public function iClickInTheRow($linkText, $rowText)
+    {
+        $row = $this->findTableRowByRowText($rowText);
+        $link = $row->findLink($linkText);
+        assertNotNull(
+            $link,
+            sprintf('A link for %s could not be found for the %s row', $linkText, $rowText)
+        );
+        $link->click();
     }
 
     private function getEntityManager(): EntityManagerInterface
@@ -243,5 +257,13 @@ class FeatureContext extends RawMinkContext implements Context
         }
 
         $em->flush();
+    }
+
+    private function findTableRowByRowText($rowText): NodeElement
+    {
+        $td = $this->getPage()->find('xpath', sprintf('//table/tbody/tr/td[.="%s"]', $rowText));
+        assertNotNull($td, sprintf('Could not find table cell containing %s', $rowText));
+
+        return $td->getParent();
     }
 }

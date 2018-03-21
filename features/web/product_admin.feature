@@ -39,3 +39,14 @@ Feature: Product Admin Area
     And I should be on "/admin/products"
     And I should see "Veloci-chew toy"
     And I should not see "Anonymous"
+
+  Scenario: Delete a product
+    Given the following products exists:
+      | name |
+      | Bar  |
+      | Foo2 |
+    And I am on "admin/products"
+    When i click "Delete" in the "Foo2" row
+    Then I should see "The product was deleted"
+    And I should not see "Foo2"
+    But I should see "Bar"
