@@ -24,6 +24,7 @@
                     <th>Price</th>
                     <th>Author</th>
                     <th>Is Published?</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -35,6 +36,11 @@
                             {{ product.author|default('Anonymous') }}
                         </td>
                         <td><i class="fa fa-{{ product.isPublished ? 'check' : 'times' }}"></i></td>
+                        <td>
+                            <a href="{{ path('product_delete', {'id' : product.id}) }}" class="js-delete-product">
+                                <span class="fa fa-remove"> Delete</span>
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -60,6 +66,17 @@
                         $modalContentHolder.modal();
                     }
                 });
+            });
+            $('.js-delete-product').on('click', function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    'url': $(this).attr('href'),
+                    'method': 'DELETE',
+                    success: function (response) {
+                        $('.container').html(response);
+                    }
+                })
             });
         });
     </script>

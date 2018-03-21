@@ -72,7 +72,7 @@ class ProductAdminController extends Controller
     }
 
     /**
-     * @Route("/admin/products/delete{id}", name="product_delete")
+     * @Route("/admin/products/delete/{id}", name="product_delete")
      */
     public function deleteAction(Product $product, Request $request)
     {

@@ -40,6 +40,7 @@ Feature: Product Admin Area
     And I should see "Veloci-chew toy"
     And I should not see "Anonymous"
 
+  @javascript
   Scenario: Delete a product
     Given the following products exists:
       | name |
@@ -47,6 +48,7 @@ Feature: Product Admin Area
       | Foo2 |
     And I am on "admin/products"
     When i click "Delete" in the "Foo2" row
+    And i wait for the flash messages to load
     Then I should see "The product was deleted"
     And I should not see "Foo2"
     But I should see "Bar"

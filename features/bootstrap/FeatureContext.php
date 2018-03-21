@@ -226,6 +226,21 @@ class FeatureContext extends RawMinkContext implements Context
         $link->click();
     }
 
+    /**
+     * @Given /^i wait for the flash messages to load$/
+     */
+    public function iWaitForTheFlashMessagesToLoad()
+    {
+        $page = $this->getPage();
+
+        $page->waitFor(
+            1,
+            function () use ($page) {
+                return $page->find('css', '.alert');
+            }
+        );
+    }
+
     private function getEntityManager(): EntityManagerInterface
     {
         return $this->getContainer()->get('doctrine.orm.entity_manager');
