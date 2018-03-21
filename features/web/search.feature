@@ -6,6 +6,7 @@ Feature: Search
   Background:
     Given I am on "/"
 
+  @loadfixtures
   Scenario Outline:
     When I fill in the search box with "<term>"
     And I press the search button

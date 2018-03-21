@@ -8,8 +8,10 @@ use Behat\Mink\Element\DocumentElement;
 use Behat\Mink\Element\NodeElement;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
 
 require_once __DIR__.'/../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -42,6 +44,17 @@ class FeatureContext extends RawMinkContext implements Context
         $em = $this->getEntityManager();
         $purger = new ORMPurger($em);
         $purger->purge();
+    }
+
+    /**
+     * @BeforeScenario @loadfixtures
+     */
+    public function loadFixtures()
+    {
+        $loader = new ContainerAwareLoader($this->getContainer());
+        $loader->loadFromDirectory(__DIR__.'/../../src/AppBundle/DataFixtures');
+        $ORMExecutor = new ORMExecutor($this->getEntityManager());
+        $ORMExecutor->execute($loader->getFixtures(), true);
     }
 
     /**
