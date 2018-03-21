@@ -3,6 +3,7 @@
 use AppBundle\Entity\Product;
 use AppBundle\Entity\User;
 use Behat\Behat\Context\Context;
+use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\DocumentElement;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
@@ -173,6 +174,26 @@ class FeatureContext extends RawMinkContext implements Context
     {
         sleep(1);
         $this->saveScreenshot($filename, __DIR__.'/../../');
+    }
+
+    /**
+     * @Given /^the following products exits:$/
+     */
+    public function theFollowingProductsExits(TableNode $table)
+    {
+        $em = $this->getEntityManager();
+
+        foreach ($table as $row) {
+            $product = new Product();
+            $product->setName($row['name'] ?? '');
+            $product->setDescription($row['description'] ?? '');
+            $product->setPrice($row['price'] ?? random_int(10, 1000));
+            $product->setIsPublished($row['is published'] === 'yes');
+
+            $em->persist($product);
+        }
+
+        $em->flush();
     }
 
     private function getEntityManager(): EntityManagerInterface

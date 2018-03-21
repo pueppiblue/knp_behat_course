@@ -18,6 +18,14 @@ Feature: Product Admin Area
     When I am on "/admin/products"
     Then I should not see "Anonymous"
 
+  Scenario:
+    Given the following products exits:
+      | name | is published |
+      | Foo1 | yes          |
+      | Bar1 | no           |
+    When I go to "/admin/products"
+   # *todo*
+
   @javascript
   Scenario: Add a new product
     And I am on "/admin/products"
